@@ -22,6 +22,7 @@ const FeedbackForm = () => {
   const params = useParams();
   const router = useRouter();
   const mobileNo = params.mobileNo as string;
+  const branch = params.branch as string;
   const [notification, setNotification] = useState<{ type: 'success' | 'error', title: string, message: string } | null>(null);
   const [currentEvent, setCurrentEvent] = useState<string>('');
 
@@ -31,6 +32,7 @@ const FeedbackForm = () => {
   const form = useForm<FeedbackFormData>({
     defaultValues: {
       mobileNo: mobileNo,
+      branch: branch,
       overallExperience: 0,
       customerService: 0,
       staffBehavior: 0,
@@ -115,12 +117,12 @@ const FeedbackForm = () => {
     }
   };
 
-  if (!mobileNo || !/^\d{10}$/.test(mobileNo)) {
+  if (!mobileNo || !/^\d{10}$/.test(mobileNo) || !branch) {
     return (
       <Card className="w-full max-w-2xl mx-auto">
         <CardContent className="p-6">
           <div className="text-center text-red-600">
-            Invalid or missing mobile number. Please use the link sent to your mobile.
+            Invalid or missing mobile number or branch code. Please use the link sent to your mobile.
           </div>
         </CardContent>
       </Card>

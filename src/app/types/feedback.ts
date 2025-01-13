@@ -1,5 +1,6 @@
 export interface FeedbackFormData {
   mobileNo: string;
+  branch: string;
   overallExperience: number;
   customerService: number;
   staffBehavior: number;
@@ -11,6 +12,7 @@ export interface FeedbackFormData {
 
 export const initialFormState: FeedbackFormData = {
   mobileNo: '',
+  branch: '',
   overallExperience: 0,
   customerService: 0,
   staffBehavior: 0,
