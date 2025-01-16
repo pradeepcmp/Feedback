@@ -102,7 +102,6 @@ const FeedbackForm = () => {
   const onSubmit = async (data: FeedbackFormData) => {
     try {
       await submitFeedback({ ...data, mobileNo });
-      console.log(data)
       setNotification({
         type: 'success',
         title: 'Success',
