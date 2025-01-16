@@ -65,6 +65,15 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
       filterData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, selectedBranch, selectedDateRange, feedbackData]);
+
+    const formatDate = (dateString: string | number | Date) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }).replace(/\//g, '/');
+    };
   
     const filterData = () => {
       let filtered = [...feedbackData];
@@ -185,24 +194,35 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
                 className="bg-white"
               />
             </div>
-            <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+            <Select 
+              value={selectedBranch} 
+              onValueChange={setSelectedBranch}
+            >
               <SelectTrigger className="w-[200px] bg-white">
                 <SelectValue placeholder="Select Branch" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Branches</SelectItem>
                 {uniqueBranches.map((branch) => (
-                  <SelectItem key={branch} value={branch}>{branch}</SelectItem>
+                  <SelectItem key={branch} value={branch || 'undefined-branch'}>
+                    {branch || 'Unnamed Branch'}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <Select value={selectedDateRange} onValueChange={setSelectedDateRange}>
+            <Select 
+              value={selectedDateRange} 
+              onValueChange={setSelectedDateRange}
+            >
               <SelectTrigger className="w-[200px] bg-white">
                 <SelectValue placeholder="Select Date Range" />
               </SelectTrigger>
               <SelectContent>
                 {dateRangeOptions.map(option => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem 
+                    key={option.value} 
+                    value={option.value || 'all-time'}
+                  >
                     {option.label}
                   </SelectItem>
                 ))}
@@ -408,7 +428,7 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
               <TableBody>
                 {filteredData.map((feedback) => (
                   <TableRow key={feedback.id} className="hover:bg-gray-50">
-                    <TableCell>{new Date(feedback.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell>{formatDate(feedback.createdAt)}</TableCell>
                     <TableCell>{feedback.mobileNo}</TableCell>
                     <TableCell>{feedback.branch}</TableCell>
                     <TableCell><StarRating rating={feedback.overallExperience} /></TableCell>

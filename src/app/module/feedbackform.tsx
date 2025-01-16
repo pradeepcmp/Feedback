@@ -102,6 +102,7 @@ const FeedbackForm = () => {
   const onSubmit = async (data: FeedbackFormData) => {
     try {
       await submitFeedback({ ...data, mobileNo });
+      console.log(data)
       setNotification({
         type: 'success',
         title: 'Success',
@@ -192,6 +193,35 @@ const FeedbackForm = () => {
                 <FormItem className="space-y-3">
                   <div className="flex items-center space-x-4">
                     <FormLabel className="text-gray-800 whitespace-nowrap">Would you recommend to others?</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        className="flex space-x-6"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="yes" id="yes" />
+                          <Label htmlFor="yes" className="text-gray-800">Yes</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="no" id="no" />
+                          <Label htmlFor="no" className="text-gray-800">No</Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+           {/* Daily rate message */}
+            <FormField
+              control={form.control}
+              name="dailyratemessage"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <div className="flex items-center space-x-4">
+                    <FormLabel className="text-gray-800 whitespace-nowrap">Are you interested in the daily rate message?</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}

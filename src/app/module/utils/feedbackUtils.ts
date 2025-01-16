@@ -5,29 +5,36 @@ import { FeedbackData, AdvancedMetrics, TimelineDataPoint, ChartDataPoint } from
 export const dateRangeOptions = [
   { value: 'all', label: 'All Time' },
   { value: 'today', label: 'Today' },
-  { value: 'week', label: 'This Week' },
-  { value: 'month', label: 'This Month' },
-  { value: 'quarter', label: 'This Quarter' },
-  { value: 'year', label: 'This Year' }
+  { value: 'yesterday', label: 'Yesterday' },
+  { value: 'last7days', label: 'Last 7 Days' },
+  { value: 'last30days', label: 'Last 30 Days' },
+  { value: 'thisMonth', label: 'This Month' },
+  { value: 'lastMonth', label: 'Last Month' },
 ];
 
-export const getDateRange = (range: string): Date => {
+export const getDateRange = (range:string):Date => {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   switch (range) {
     case 'today':
       return today;
-    case 'week':
-      today.setDate(today.getDate() - 7);
-      return today;
-    case 'month':
-      today.setMonth(today.getMonth() - 1);
-      return today;
-    case 'quarter':
-      today.setMonth(today.getMonth() - 3);
-      return today;
-    case 'year':
-      today.setFullYear(today.getFullYear() - 1);
-      return today;
+    case 'yesterday':
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      return yesterday;
+    case 'last7days':
+      const last7Days = new Date(today);
+      last7Days.setDate(last7Days.getDate() - 7);
+      return last7Days;
+    case 'last30days':
+      const last30Days = new Date(today);
+      last30Days.setDate(last30Days.getDate() - 30);
+      return last30Days;
+    case 'thisMonth':
+      return new Date(today.getFullYear(), today.getMonth(), 1);
+    case 'lastMonth':
+      return new Date(today.getFullYear(), today.getMonth() - 1, 1);
     default:
       return new Date(0);
   }

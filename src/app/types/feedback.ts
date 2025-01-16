@@ -6,6 +6,7 @@ export interface FeedbackFormData {
   staffBehavior: number;
   jewelryCollection: number;
   wouldRecommend: string;
+  dailyratemessage: string;
   discoveryMethods: string[];
   additionalComments?: string;
 }
@@ -18,6 +19,7 @@ export const initialFormState: FeedbackFormData = {
   staffBehavior: 0,
   jewelryCollection: 0,
   wouldRecommend: '',
+  dailyratemessage: '',
   discoveryMethods: [],
   additionalComments: ''
 };
