@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from 'next/image'
 import logo from '../../../public/SPACE LOGO 3D 03.png'
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, FileSpreadsheet, RefreshCcw } from 'lucide-react';
+import { Star, FileSpreadsheet, RefreshCcw, LogOut } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { FeedbackData, TimelineDataPoint, AdvancedMetrics } from '@/app/types/feedbackreport';
 import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calculateTimelineData,exportToCSV } from '@/app/module/utils/feedbackUtils';
@@ -29,6 +31,7 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
   );
   
   const FeedbackReport = () => {
+    const router = useRouter();
     const [feedbackData, setFeedbackData] = useState<FeedbackData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -136,7 +139,24 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
     const handleExportCSV = () => {
       exportToCSV(filteredData);
     };
-  
+    const handleLogout = () => {
+      // Remove all cookies
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      }
+      
+      // Alternative way using js-cookie library
+      Object.keys(Cookies.get()).forEach(cookieName => {
+        Cookies.remove(cookieName);
+      });
+      
+      // Navigate to login page
+      router.push('./login');
+    };
     if (loading) {
       return (
         <div className="flex justify-center items-center h-96">
@@ -156,9 +176,18 @@ import { dateRangeOptions,getDateRange,calculateMetrics,calculateChartData,calcu
     }
 
     return (
-        <div className="space-y-6">
-        <div className="flex justify-center items-center w-full h-full mb-3">
-        <Image src={logo} alt="space" width={500} height={500} priority className="drop-shadow-xl" />
+      <div className="space-y-6">
+      <div className="flex justify-between items-center w-full mb-3">
+        <div className="flex-1 flex justify-center">
+          <Image src={logo} alt="space" width={500} height={500} priority className="drop-shadow-xl" />
+        </div>
+        <Button 
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </Button>
       </div>
           {/* Header Section */}
           <div className="flex justify-between items-center">
