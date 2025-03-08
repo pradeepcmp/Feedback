@@ -12,8 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Loader2, MapPin, AlertCircle, CheckCircle, RefreshCw, 
+import { Loader2, MapPin, AlertCircle, CheckCircle, RefreshCw, 
   HelpCircle, Eye, EyeOff, UserIcon, BuildingIcon, 
   Globe, Moon, Sun, Languages, Lock, Fingerprint, BriefcaseIcon, CircleAlert
 } from "lucide-react";
