@@ -49,7 +49,9 @@ const LoginForm = () => {
     showSuccess: false,
     data: null as LocationData | null,
   });
-
+  const [userPermissions, setUserPermissions] = useState({
+    hasFeedbackAccess: false
+  });
   // Animation states
   const [formVisible, setFormVisible] = useState(false);
 
@@ -119,14 +121,31 @@ const LoginForm = () => {
       }
   
       // Extract authorized screens for the first portal
-      const authorizedUsers = data?.userRoles[0]?.portals?.[2]?.screens || [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let allAuthorizedScreens: any[] = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data.userRoles.forEach((role: { portals: { screens: any; }[]; }) => {
+        if (role.portals && Array.isArray(role.portals)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          role.portals.forEach((portal: { screens: any; }) => {
+            if (portal.screens && Array.isArray(portal.screens)) {
+              allAuthorizedScreens = [...allAuthorizedScreens, ...portal.screens];
+            }
+          });
+        }
+      });
 //   console.info("Found authorized screens",authorizedUsers)
-      // Check if feedback_report exists in authorized screens
-      if (!authorizedUsers.some((screen: { value: string }) => screen.value.toLowerCase() === "feedback_report")) {
-        setErrorMessage("Unauthorized: No Portal Access");
-        setIsFormDisabled(true)
-        return;
-      }
+const hasFeedbackAccess = allAuthorizedScreens.some((screen: { value: string; }) => screen.value.toLowerCase() === "feedback_report");
+setUserPermissions({hasFeedbackAccess});
+
+// Check if any valid screen access exists
+if (hasFeedbackAccess) {
+  setIsFormDisabled(false);
+} else {
+  setErrorMessage("Unauthorized: No Portal Access");
+  setIsFormDisabled(true);
+  return;
+}
       setIsFormDisabled(false);
       // Pre-select concern if only one exists
       if (data.concerns && data.concerns.length === 1) {
@@ -398,9 +417,10 @@ const LoginForm = () => {
         setCookie("token", response.data.token, { maxAge: cookieExpiry });
         setCookie("user", JSON.stringify(response.data.user), { maxAge: cookieExpiry });
 
-        // Redirect to feedback_report
-        router.push("/feedback_report");
-        return;
+        if (userPermissions.hasFeedbackAccess) {
+          router.push("/feedback_report");
+          return;
+        }
       } else {
         setErrorMessage(response.data.message || "Invalid OTP");
       }
