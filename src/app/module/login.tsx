@@ -295,11 +295,19 @@ const LoginForm = () => {
   ) => {
     const { name, value } = e.target;
     
-    if (name === 'userCode' && value !== formData.userCode) {
-      resetFormFields();
+    if (name === 'userCode') {
+      // Convert to uppercase and allow only alphabets and numbers
+      const uppercaseValue = value.toUpperCase();
+      const alphanumericValue = uppercaseValue.replace(/[^A-Z0-9]/g, '');
+      
+      if (alphanumericValue !== formData.userCode) {
+        resetFormFields();
+      }
+      
+      setFormData((prev) => ({ ...prev, [name]: alphanumericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle select changes
@@ -623,6 +631,7 @@ const LoginForm = () => {
                       name="userCode"
                       value={formData.userCode}
                       onChange={handleInputChange}
+                      maxLength={8}
                     //   disabled={isFormDisabled}
                       className={`w-full pl-10 ${
                         darkMode 
