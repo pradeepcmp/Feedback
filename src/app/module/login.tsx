@@ -89,7 +89,7 @@ const LoginForm = () => {
     try {
       setIsLoading(true);
       setErrorMessage('');
-  
+      setIsFormDisabled(true);
       const response = await axios.get(`https://cust.spacetextiles.net/getCombinedUserRoleDatas/${formData.userCode}`);
       
       const data = response.data;
